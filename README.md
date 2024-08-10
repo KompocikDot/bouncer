@@ -11,16 +11,16 @@ func main() {
         return nil
     }
 
-    task := bouncer.Task{
+    taskIn := bouncer.Task{
         Func: taskFunc,
         Config: bouncer.Config{
             ScheduleIn: time.Duration(5 * time.Second),
         },
     }
 
-    b.Schedule(task)
+    b.Schedule(taskIn)
 
-    task2 := bouncer.Task{
+    taskAt := bouncer.Task{
         Func: taskFunc,
         Config: bouncer.Config{
             // Will be scheduled in 10 hours from now but it can be pure time.Time struct
@@ -28,7 +28,7 @@ func main() {
         },
     }
 
-    b.ScheduleMultiple([]bouncer.Task{task, tas2})
+    b.ScheduleMultiple([]bouncer.Task{taskIn, taskAt})
 }
 ```
 
