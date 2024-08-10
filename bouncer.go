@@ -10,7 +10,7 @@ type Bouncer struct {
 	wg sync.WaitGroup
 }
 
-func NewBouncer() *Bouncer {
+func New() *Bouncer {
 	return new(Bouncer)
 }
 
