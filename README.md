@@ -26,7 +26,7 @@ func main() {
             // Will be scheduled in 10 hours from now but it can be pure time.Time struct
             ScheduleAt: time.Now().Add(10 * time.Hour), 
             RetriesAmount: 5,
-            RetryDelayMS: 250
+            RetryDelay: time.Second * 5,
         },
     }
 

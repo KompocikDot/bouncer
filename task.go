@@ -7,7 +7,7 @@ import (
 type Config struct {
 	ScheduleAt    time.Time
 	ScheduleIn    time.Duration
-	RetryDelayMS  uint
+	RetryDelay    time.Duration
 	RetriesAmount uint
 }
 
@@ -21,8 +21,8 @@ func (c *Config) SetScheduleIn(in time.Duration) *Config {
 	return c
 }
 
-func (c *Config) SetRetryDelayMS(delayMS uint) *Config {
-	c.RetryDelayMS = delayMS
+func (c *Config) SetRetryDelay(delay time.Duration) *Config {
+	c.RetryDelay = delay
 	return c
 }
 

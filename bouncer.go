@@ -35,8 +35,8 @@ func (b *Bouncer) internalSchedule(task Task) {
 				break
 			}
 
-			if task.Config.RetryDelayMS > 0 {
-				time.Sleep(time.Millisecond * time.Duration(task.Config.RetryDelayMS))
+			if task.Config.RetryDelay > 0 {
+				time.Sleep(task.Config.RetryDelay)
 			}
 
 			retries++
