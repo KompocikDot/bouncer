@@ -5,11 +5,10 @@ import (
 )
 
 type Config struct {
-	ScheduleAt     time.Time
-	ScheduleIn     time.Duration
-	RetryDelayMS   int
-	RetriesAmount  int
-	RetryOnFailure bool
+	ScheduleAt    time.Time
+	ScheduleIn    time.Duration
+	RetryDelayMS  uint
+	RetriesAmount uint
 }
 
 func (c *Config) SetScheduleAt(at time.Time) *Config {
@@ -22,18 +21,13 @@ func (c *Config) SetScheduleIn(in time.Duration) *Config {
 	return c
 }
 
-func (c *Config) SetRetryDelayMS(delayMS int) *Config {
+func (c *Config) SetRetryDelayMS(delayMS uint) *Config {
 	c.RetryDelayMS = delayMS
 	return c
 }
 
-func (c *Config) SetRetriesAmount(amount int) *Config {
+func (c *Config) SetRetriesAmount(amount uint) *Config {
 	c.RetriesAmount = amount
-	return c
-}
-
-func (c *Config) SetRetryOnFailure(retry bool) *Config {
-	c.RetryOnFailure = retry
 	return c
 }
 

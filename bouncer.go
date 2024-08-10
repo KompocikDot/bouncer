@@ -24,11 +24,28 @@ func (b *Bouncer) internalSchedule(task Task) {
 	}
 
 	runFunc := func() {
-		defer b.wg.Done()
-		task.Func()
+		var retries uint = 0
+		var firstRun bool = true
+
+		for retries < task.Config.RetriesAmount || firstRun {
+			defer b.wg.Done()
+			err := task.Func()
+
+			if err == nil {
+				break
+			}
+
+			if task.Config.RetryDelayMS > 0 {
+				time.Sleep(time.Millisecond * time.Duration(task.Config.RetryDelayMS))
+			}
+
+			retries++
+			firstRun = false
+		}
 	}
 
 	b.wg.Add(1)
+
 	if !task.Config.ScheduleAt.IsZero() {
 		waitFor := time.Until(task.Config.ScheduleAt)
 		time.AfterFunc(waitFor, runFunc)
