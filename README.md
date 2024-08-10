@@ -25,6 +25,8 @@ func main() {
         Config: bouncer.Config{
             // Will be scheduled in 10 hours from now but it can be pure time.Time struct
             ScheduleAt: time.Now().Add(10 * time.Hour), 
+            RetriesAmount: 5,
+            RetryDelayMS: 250
         },
     }
 
