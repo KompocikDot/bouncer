@@ -35,6 +35,7 @@ func main() {
     // After that all code is waiting for all tasks to be completed
     // no more tasks can be scheduled after this point
     b.Run()
+    b.Wait()
 }
 ```
 
