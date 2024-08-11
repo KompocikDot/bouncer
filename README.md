@@ -41,7 +41,9 @@ func main() {
 ### Available Methods:
 - ```Schedule(bouncer.Task)```
 - ```ScheduleMultiple([]bouncer.Task)```
-- ```Run()```
+- ```Run()``` - starts all the tasks
+- ```Wait()``` - blocks  the app until all tasks are finished
+- ```RunAndWait()``` - does both Run and Wait
 
 ## Support
 If you have encountered a bug or have any ideas how to improve this library - don't be afraid to open an issue with an explanation.

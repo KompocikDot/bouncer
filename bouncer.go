@@ -76,10 +76,20 @@ func (b *Bouncer) ScheduleMultiple(tasks []Task) {
 }
 
 func (b *Bouncer) Run() {
-	for _, task := range b.tasks {
-		b.internalSchedule(task)
-	}
+	if !b.sealed {
+		for _, task := range b.tasks {
+			b.internalSchedule(task)
+		}
 
-	b.sealed = true
+		b.sealed = true
+	}
+}
+
+func (b *Bouncer) Wait() {
 	b.wg.Wait()
+}
+
+func (b *Bouncer) RunAndWait() {
+	b.Run()
+	b.Wait()
 }
