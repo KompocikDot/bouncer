@@ -9,7 +9,6 @@ import (
 type Bouncer struct {
 	sealed bool
 	wg     sync.WaitGroup
-	tasks  []Task
 }
 
 func New() *Bouncer {
@@ -29,11 +28,18 @@ func (b *Bouncer) internalSchedule(task Task) {
 		var retries uint = 0
 		var firstRun bool = true
 
-		for retries < task.Config.RetriesAmount || firstRun {
+		for retries < task.Config.RetriesAmount || task.Config.ScheduleEvery > 0 || firstRun {
 			defer b.wg.Done()
 			err := task.Func()
 
 			if err == nil {
+				if task.Config.ScheduleEvery > 0 {
+					time.Sleep(task.Config.ScheduleEvery)
+					retries = 0
+					continue
+				}
+
+				// This part is called when task is not scheduled every X but we still got success
 				break
 			}
 
@@ -63,33 +69,22 @@ func (b *Bouncer) internalSchedule(task Task) {
 
 func (b *Bouncer) Schedule(task Task) {
 	if b.sealed {
-		log.Fatalln("Cannot add new tasks after Run method")
+		log.Fatalln("Cannot add new tasks after Wait method")
 	}
-	b.tasks = append(b.tasks, task)
+
+	b.internalSchedule(task)
 }
 
 func (b *Bouncer) ScheduleMultiple(tasks []Task) {
 	if b.sealed {
-		log.Fatalln("Cannot add new tasks after Run method")
+		log.Fatalln("Cannot add new tasks after Wait method")
 	}
-	b.tasks = append(b.tasks, tasks...)
-}
 
-func (b *Bouncer) Run() {
-	if !b.sealed {
-		for _, task := range b.tasks {
-			b.internalSchedule(task)
-		}
-
-		b.sealed = true
+	for _, task := range tasks {
+		b.internalSchedule(task)
 	}
 }
-
 func (b *Bouncer) Wait() {
+	b.sealed = true
 	b.wg.Wait()
-}
-
-func (b *Bouncer) RunAndWait() {
-	b.Run()
-	b.Wait()
 }

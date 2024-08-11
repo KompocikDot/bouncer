@@ -30,11 +30,12 @@ func main() {
         },
     }
 
-    b.ScheduleMultiple([]bouncer.Task{taskIn, taskAt})
-    
+    // Also you can use builder
+    taskEvery := bouncer.NewTask().SetScheduleEvery(time.Hour * 12)
+    b.ScheduleMultiple([]bouncer.Task{taskAt, taskEvery}) 
+
     // After that all code is waiting for all tasks to be completed
     // no more tasks can be scheduled after this point
-    b.Run()
     b.Wait()
 }
 ```
@@ -42,9 +43,7 @@ func main() {
 ### Available Methods:
 - ```Schedule(bouncer.Task)```
 - ```ScheduleMultiple([]bouncer.Task)```
-- ```Run()``` - starts all the tasks
-- ```Wait()``` - blocks  the app until all tasks are finished
-- ```RunAndWait()``` - does both Run and Wait
+- ```Wait()``` - blocks the app until all tasks are finished
 
 ## Support
 If you have encountered a bug or have any ideas how to improve this library - don't be afraid to open an issue with an explanation.
