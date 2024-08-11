@@ -7,7 +7,8 @@ import (
 )
 
 type Bouncer struct {
-	wg sync.WaitGroup
+	wg    sync.WaitGroup
+	tasks []Task
 }
 
 func New() *Bouncer {
@@ -60,14 +61,19 @@ func (b *Bouncer) internalSchedule(task Task) {
 }
 
 func (b *Bouncer) Schedule(task Task) {
-	b.internalSchedule(task)
-	b.wg.Wait()
+	b.tasks = append(b.tasks, task)
 }
 
 func (b *Bouncer) ScheduleMultiple(tasks []Task) {
-	for _, task := range tasks {
-		b.internalSchedule(task)
-	}
+	b.tasks = append(b.tasks, tasks...)
+}
 
-	b.wg.Wait()
+func (b *Bouncer) Run() {
+	go func() {
+		for _, task := range b.tasks {
+			b.internalSchedule(task)
+		}
+
+		b.wg.Wait()
+	}()
 }
