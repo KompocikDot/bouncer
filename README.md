@@ -31,6 +31,10 @@ func main() {
     }
 
     b.ScheduleMultiple([]bouncer.Task{taskIn, taskAt})
+    
+    // After that all code is waiting for all tasks to be completed
+    // no more tasks can be scheduled after this point
+    b.Run()
 }
 ```
 

@@ -7,8 +7,9 @@ import (
 )
 
 type Bouncer struct {
-	wg    sync.WaitGroup
-	tasks []Task
+	sealed bool
+	wg     sync.WaitGroup
+	tasks  []Task
 }
 
 func New() *Bouncer {
@@ -61,10 +62,16 @@ func (b *Bouncer) internalSchedule(task Task) {
 }
 
 func (b *Bouncer) Schedule(task Task) {
+	if b.sealed {
+		log.Fatalln("Cannot add new tasks after Run method")
+	}
 	b.tasks = append(b.tasks, task)
 }
 
 func (b *Bouncer) ScheduleMultiple(tasks []Task) {
+	if b.sealed {
+		log.Fatalln("Cannot add new tasks after Run method")
+	}
 	b.tasks = append(b.tasks, tasks...)
 }
 
@@ -73,5 +80,6 @@ func (b *Bouncer) Run() {
 		b.internalSchedule(task)
 	}
 
+	b.sealed = true
 	b.wg.Wait()
 }
